@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetGuard Presentation Deck | SEE Hackathon Abhinava</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #131c31;
+      --border: #1e293b;
+      --accent: #38bdf8;
+      --accent-purple: #818cf8;
+      --accent-green: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .slide-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 3.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .slide.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+    h2 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #fff, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .box {
+      background: rgba(9, 13, 22, 0.6);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+    }
+    .box h3 {
+      font-size: 1.15rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .box p, .box li {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    ul { padding-left: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.25rem;
+    }
+    .controls {
+      background: #0d1322;
+      border-top: 1px solid var(--border);
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-nav {
+      background: #1e293b;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-nav:hover { background: var(--accent); color: #000; }
+    .slide-indicator { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <!-- SLIDE 1 -->
+    <div class="slide active" id="slide-1">
+      <span class="tag">SEE Hackathon अभिनव (Abhinava) 2026 • Problem Statement 7</span>
+      <h2>NetGuard: Network Traffic Analyzer & Intrusion Detection</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>🚨 Problem Background</h3>
+          <p>
+            Modern campus and enterprise networks suffer from opaque traffic visibility. Cyber threats such as <strong>stealth reconnaissance port scans</strong> and <strong>distributed DoS floods</strong> blend into background web traffic, making manual packet inspection impossible without automated Layer 2–4 decoders.
+          </p>
+        </div>
+        <div class="box">
+          <h3>👥 Team NetGuard (Section J)</h3>
+          <ul>
+            <li><strong>Abhishek Maurya</strong> (<code>R25EJ004</code>) — Lead & Core Engine</li>
+            <li><strong>Arun H Kalamuddi</strong> (<code>R25EJ013</code>) — Anomaly Detection</li>
+            <li><strong>Rakesh N</strong> (<code>R25EJ042</code>) — Dashboard & Visualization</li>
+            <li><strong>Sneha R</strong> (<code>R25EJ058</code>) — Testing, PCAP & Slides</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide" id="slide-2">
+      <span class="tag">Slide 2 • Architecture & Workflow</span>
+      <h2>End-to-End System Architecture</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>⚙️ Processing Pipeline</h3>
+          <ul>
+            <li><strong>Packet Ingestion:</strong> Zero-dependency binary Libpcap parser reading standard pcap captures.</li>
+            <li><strong>Layer 2–4 Demuxing:</strong> Unpacks Ethernet MAC, IPv4 headers, and TCP/UDP/ICMP control flags.</li>
+            <li><strong>Anomaly Engine:</strong> Real-time heuristic state machine detecting Port Scans, DoS SYN floods, and malware ports.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>📊 Real-Time Analytics</h3>
+          <ul>
+            <li><strong>Top Talker Matrix:</strong> Aggregates source/destination IPs by volume and packet counts.</li>
+            <li><strong>Protocol Breakdown:</strong> Live percentage shares for HTTP, HTTPS, DNS, TCP, ICMP.</li>
+            <li><strong>Interactive UI:</strong> Browser dashboard with Chart.js visuals and instant packet filter.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide" id="slide-3">
+      <span class="tag">Slide 3 • Technology Stack</span>
+      <h2>Under the Hood: Pure Python Architecture</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>🛠️ Core Engineering Stack</h3>
+          <ul>
+            <li><strong>Language:</strong> Python 3.x (Clean, modular OOP design).</li>
+            <li><strong>Binary Decoding:</strong> Python standard <code>struct</code> + <code>socket</code> (no Npcap/Wireshark driver locks).</li>
+            <li><strong>Web Engine:</strong> Native <code>http.server</code> Threading API (0 pip dependencies).</li>
+            <li><strong>Frontend:</strong> HTML5, CSS3 Glassmorphism, Chart.js 4.4.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>⚡ Key Performance Innovations</h3>
+          <ul>
+            <li><strong>Zero External Footprint:</strong> Runs out of the box on any Windows/Linux machine without installing external drivers.</li>
+            <li><strong>Stream Processing:</strong> Generator-based packet iterator preventing memory exhaustion on large multi-MB captures.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide" id="slide-4">
+      <span class="tag">Slide 4 • Security Detections & Results</span>
+      <h2>Intrusion Detections in Live Evaluations</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>🎯 Attack Scenario Detections</h3>
+          <ul>
+            <li><code>PORT_SCAN</code>: Flags attacker <code>10.0.0.99</code> probing 15+ destination ports during reconnaissance.</li>
+            <li><code>SYN_FLOOD_DOS</code>: Identifies unacknowledged SYN flood from <code>172.16.4.88</code> attempting to exhaust server backlog.</li>
+            <li><code>SUSPICIOUS_PORT</code>: Flags unauthorized connections to ports <code>23</code> (Telnet), <code>4444</code> (Metasploit), and <code>31337</code>.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>🛡️ False Positive Mitigation</h3>
+          <p>
+            Standard servers (DNS on 53, HTTP on 80) respond to ephemeral client ports. Our engine intelligently distinguishes server responses from outbound horizontal port scans to maintain 100% precision.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide" id="slide-5">
+      <span class="tag">Slide 5 • Challenges & Future Scope</span>
+      <h2>Engineering Challenges & Roadmap</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>🧗 12-Hour Build Challenges Solved</h3>
+          <ul>
+            <li><strong>Binary Parsing:</strong> Handling big-endian vs little-endian PCAP headers without external C bindings.</li>
+            <li><strong>Cross-Platform Consoles:</strong> Ensuring cp1252 Windows terminal safety alongside live browser rendering.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>🚀 Future Extensions</h3>
+          <ul>
+            <li><strong>Machine Learning Classifier:</strong> Train a Decision Tree / Random Forest on packet flow statistics (NSL-KDD integration).</li>
+            <li><strong>Live Raw Socket Sniffing:</strong> Linux Promiscuous mode integration with automated firewall rule insertion (iptables drop).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-nav" id="prevBtn">← Previous Slide</button>
+    <div class="slide-indicator" id="indicator">Slide 1 of 5 (Use Arrow Keys or Space)</div>
+    <button class="btn-nav" id="nextBtn">Next Slide →</button>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    function showSlide(n) {
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`slide-${n}`);
+      if (target) target.classList.add('active');
+      document.getElementById('indicator').textContent = `Slide ${n} of ${totalSlides} (Use Arrow Keys or Space)`;
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); }
+      } else if (e.key === 'ArrowLeft') {
+        if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); }
+      }
+    });
+  </script>
+</body>
+</html>
