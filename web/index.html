@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetGuard: Network Traffic Analyzer & Intrusion Detection System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- TOP HEADER -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="logo-icon">🛡️</div>
+        <div>
+          <div class="brand-title">NetGuard Traffic Analyzer</div>
+          <div class="brand-subtitle">SEE Hackathon अभिनव (Abhinava) • REVA University • B25CS0311 Topic 7</div>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <label for="pcapSelect" class="control-label">Scenario Capture:</label>
+        <select id="pcapSelect" class="select-input">
+          <option value="mixed_campus_traffic.pcap" selected>Mixed Campus (Normal + Port Scan + DoS)</option>
+          <option value="sample_port_scan.pcap">Reconnaissance (Nmap Port Scan)</option>
+          <option value="sample_syn_flood.pcap">Denial-of-Service (TCP SYN Flood)</option>
+          <option value="sample_normal.pcap">Normal Traffic (Clean Baseline)</option>
+        </select>
+        <button id="refreshBtn" class="btn btn-primary">⚡ Refresh Analysis</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- TEAM BANNER -->
+      <section class="banner-card">
+        <div class="banner-grid">
+          <div>
+            <span class="badge badge-primary">Team NetGuard (Group 7)</span>
+            <span class="badge badge-success">Live Evaluation Ready</span>
+            <h1 class="banner-heading">Real-Time Packet Sniffing & Intrusion Analytics</h1>
+            <p class="banner-text">
+              High-performance packet parser and security anomaly engine decoding Layer 2–4 network traffic (Ethernet, IPv4, TCP, UDP, ICMP, DNS, HTTP) with automated detection of port scans and SYN flood attacks.
+            </p>
+          </div>
+          <div class="team-roster-box">
+            <div class="roster-header">Team Roster (Section J):</div>
+            <ul class="roster-list">
+              <li><strong>Abhishek Maurya</strong> (<code>R25EJ004</code>) — Lead & Packet Engine</li>
+              <li><strong>Arun H Kalamuddi</strong> (<code>R25EJ013</code>) — Anomaly Detection & Logic</li>
+              <li><strong>Rakesh N</strong> (<code>R25EJ042</code>) — Dashboard & Visualization</li>
+              <li><strong>Sneha R</strong> (<code>R25EJ058</code>) — Testing, PCAP & Slides</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- KPI METRIC CARDS -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Packets</div>
+          <div id="metricPackets" class="metric-value">--</div>
+          <div class="metric-sub">Analyzed Frames</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Traffic Volume</div>
+          <div id="metricBytes" class="metric-value">--</div>
+          <div class="metric-sub">Raw Bytes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Packet Rate</div>
+          <div id="metricRate" class="metric-value">--</div>
+          <div class="metric-sub">Packets / Second</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Network Throughput</div>
+          <div id="metricThroughput" class="metric-value">--</div>
+          <div class="metric-sub">Kilobits / Second</div>
+        </div>
+        <div class="metric-card alert-card">
+          <div class="metric-label">Security Alerts</div>
+          <div id="metricAlerts" class="metric-value text-danger">--</div>
+          <div class="metric-sub">Anomalies Detected</div>
+        </div>
+      </section>
+
+      <!-- CHARTS SECTION -->
+      <section class="charts-grid">
+        <!-- PROTOCOL BREAKDOWN -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>📊 Protocol Distribution</h3>
+            <span class="panel-tag">L4 / L7 Shares</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="protocolChart"></canvas>
+          </div>
+        </div>
+
+        <!-- TOP TALKERS -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>🏆 Top Talkers (Source IPs)</h3>
+            <span class="panel-tag">By Volume</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="topTalkersChart"></canvas>
+          </div>
+        </div>
+
+        <!-- PACKET SIZE HISTOGRAM -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>📏 Packet Size Buckets</h3>
+            <span class="panel-tag">MTU Profiling</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="sizeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- TOP DESTINATION PORTS -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>🎯 Destination Port Activity</h3>
+            <span class="panel-tag">Service Targets</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="portChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECURITY ALERTS TABLE -->
+      <section class="panel-card full-width">
+        <div class="panel-header">
+          <h3>🚨 Active Security Anomalies & Intrusion Alerts</h3>
+          <span id="alertCountBadge" class="badge badge-danger">0 Alerts</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Severity</th>
+                <th>Alert Type</th>
+                <th>Attacker IP</th>
+                <th>Anomaly Description</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="alertsTableBody">
+              <tr><td colspan="5" class="text-center">No alerts loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PACKET INSPECTOR STREAM -->
+      <section class="panel-card full-width">
+        <div class="panel-header">
+          <h3>🔍 Real-Time Packet Stream & Inspector</h3>
+          <input type="text" id="packetSearch" class="search-input" placeholder="Search by IP, Protocol, Port...">
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Timestamp (s)</th>
+                <th>Protocol</th>
+                <th>Source IP : Port</th>
+                <th>Destination IP : Port</th>
+                <th>Flags</th>
+                <th>Length</th>
+              </tr>
+            </thead>
+            <tbody id="packetsTableBody">
+              <tr><td colspan="7" class="text-center">Loading packets...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div>REVA University School of Computer Science & Engineering • B25CS0311 Portfolio Building</div>
+      <div>Designed & Built by Team NetGuard for SEE Hackathon अभिनव (Abhinava) 2026</div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
