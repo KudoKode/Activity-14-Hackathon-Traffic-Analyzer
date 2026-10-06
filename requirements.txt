@@ -1,0 +1,15 @@
+# NetGuard - Network Traffic Analyzer & Intrusion Detection System
+# SEE Hackathon अभिनव (Abhinava) 2026 - REVA University
+
+# Core Engine Requirements:
+# ZERO third-party pip dependencies required!
+# Runs 100% out-of-the-box using the Python 3 Standard Library:
+# - struct (Binary libpcap and packet header decoding)
+# - socket (IP address translation and networking)
+# - http.server (Native multi-threaded local web server and REST API)
+# - json, urllib, collections, unittest (State management and testing)
+
+# Optional dependencies for extended data science / scapy workflows:
+# scapy>=2.5.0
+# matplotlib>=3.8.0
+# pandas>=2.2.0
